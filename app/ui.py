@@ -3,6 +3,9 @@ from tkinter import messagebox
 from tkinter import ttk
 from tkcalendar import DateEntry
 from app.validators import somente_letras, somente_numeros
+from services.api_client import FlightAPI
+
+api = FlightAPI("Y9cX6K5KAc2NNSqq4atel9VdGubS3V2I", "8vF9GfKJr6JA37Ko")
 
 
 class App:
@@ -102,7 +105,7 @@ class App:
         origem = self.entry_origem.get()
         destino = self.entry_destino.get()
         pessoas = self.combo_pessoas.get()
-        data = self.data_ida.get()
+        data_ida = self.data_ida.get()
         data_volta = None
         
         if self.tipo_viagem.get() == "ida_volta":
@@ -122,11 +125,14 @@ class App:
         
         mensagem = (
             f"Buscando voo de {origem} para {destino}\n"
-            f"Data de ida: {data}\n" 
+            f"Data de ida: {data_ida}\n" 
             f"Pessoas: {pessoas}"
         )
 
         if data_volta:
             mensagem += f"\nVolta: {data_volta}"
+
+        resultado = api.buscar_voos(origem, destino, data_ida)
+        print(resultado)
 
         messagebox.showinfo("Busca", mensagem)
